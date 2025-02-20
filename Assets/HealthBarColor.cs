@@ -21,7 +21,6 @@ public class HealthBarColor : MonoBehaviour {
 		} else if (-gameObject.GetComponent<RectTransform> ().offsetMax.x >= 73) {
 			gameObject.GetComponent<Image> ().color = Color.yellow;
 		} else {
-			//Debug.Log ("haha");
 			gameObject.GetComponent<Image> ().color = Color.green;
 		}
 	}

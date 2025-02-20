@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour {
 
@@ -52,6 +53,13 @@ public class GameManager : MonoBehaviour {
 	private GameObject imageBetweenScenes;
 
 	public GameObject playerThrowingPokeball;
+
+
+
+	//loading phase
+	public OwnedPokemon loadedPokemon;
+	public BasePokemon basePokemon = new BasePokemon ();
+	public GameObject pokemon;
 
 
 
@@ -191,7 +199,7 @@ public class GameManager : MonoBehaviour {
 		dPoke.transform.parent = defencePodium;
 		dPoke.transform.localPosition = pokeLocalPos;
 		BasePokemon tempPoke = dPoke.AddComponent<BasePokemon> () as BasePokemon;
-		tempPoke.AddMember (battlePokemon); 
+		tempPoke.AddMember (battlePokemon);
 
 		dPoke.GetComponent<SpriteRenderer> ().sprite = battlePokemon.image;
 		updateText.text ="A wild "+ dPoke.GetComponent<BasePokemon>().PName+ " appeared!";
@@ -262,7 +270,7 @@ public class GameManager : MonoBehaviour {
 
 	public void Load()
 	{
-
+		
 		if (File.Exists (Application.persistentDataPath + "/savedGames.gd")) {
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (Application.persistentDataPath + "/savedGames.gd", FileMode.Open);
@@ -275,6 +283,44 @@ public class GameManager : MonoBehaviour {
 			}
 
 			PlayerPrefs.SetString ("PlayerName", data.name);
+
+			pokemon = Instantiate(Resources.Load ("Prefabs/Pokemon/Squirtle", typeof(GameObject))) as GameObject;
+			Debug.Log(pokemon.name);
+			pokemon.transform.parent = player.transform;
+			pokemon.SetActive (false);
+
+
+			loadedPokemon.level = data.level;
+			loadedPokemon.NickName = data.nickName;
+			loadedPokemon.moves.Add (data.moves);
+
+
+		/*	basePokemon.canEvolve = data.basePokemonSerialized.canEvolve;
+			basePokemon.attackStat = data.basePokemonSerialized.attackStat;
+			basePokemon.biomeFound = data.basePokemonSerialized.biomeFound;
+			basePokemon.defenceStat = data.basePokemonSerialized.defenceStat;
+			basePokemon.HP = data.basePokemonSerialized.HP;
+			basePokemon.level = data.basePokemonSerialized.level;
+			basePokemon.maxHP = data.basePokemonSerialized.maxHP;
+			basePokemon.PName = data.basePokemonSerialized.PName;
+			basePokemon.pokemonStats = data.basePokemonSerialized.pokemonStats;
+			basePokemon.rarity = data.basePokemonSerialized.rarity;
+			basePokemon.speed = data.basePokemonSerialized.speed;
+			basePokemon.type = data.basePokemonSerialized.type;
+			basePokemon.image = Resources.Load (data.basePokemonSerialized.image) as Sprite;*/
+
+
+			loadedPokemon.ownedPokemon = pokemon.GetComponent<BasePokemon> ();
+
+
+
+
+
+
+			player.GetComponent<Player> ().ownedPokemon.Add (loadedPokemon);
+
+
+
 
 
 
@@ -315,6 +361,11 @@ public class PlayerData
 	public string audio;
 	public string sprite;
 	public string name;
+	public List<OwnedPokemon> ownedPokemon;
+	public string nickName;
+	public int level;
+	public PokemonMoves moves;
+	public BasePokemonSerialized basePokemonSerialized;
 }
 
 
