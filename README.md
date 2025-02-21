@@ -8,3 +8,4 @@ Refer to the design document for added details.
 *development will resume Late December/ early January*
  
 "Plz let me know if you want customize it"
+"Plz contact telegram @mickey0x7"
